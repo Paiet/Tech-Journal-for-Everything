@@ -1,0 +1,1 @@
+# Tech-Journal-for-Everything
