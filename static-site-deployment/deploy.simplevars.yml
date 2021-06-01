@@ -1,0 +1,44 @@
+--- 
+
+- hosts: webserver
+  become: true
+  gather_facts: false
+  vars:
+    http_port: 3000
+    site_folder: "more-awesome-site"
+  tasks:
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+    - name:
+      debug:
+        msg: "{{ site_folder }}"
+    - name: add the project folder
+      synchronize:
+        src: "{{ site_folder }}" 
+        dest: /var/www/
+    - name: add the nginx configuration
+      template:
+        src: "{{ site_folder }}.nginx.conf.j2"
+        dest: "/etc/nginx/sites-available/{{ site_folder }}"
+    - name: deactivate the default nginx configuration
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+    - name: activate the configuration
+      file:
+        src: "/etc/nginx/sites-available/{{ site_folder }}"
+        dest: "/etc/nginx/sites-enabled/{{ site_folder }}"
+        state: link
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
+   
+        
+

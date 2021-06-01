@@ -1,0 +1,15 @@
+server {
+       
+       listen {{ http_port }};
+       listen [::]:{{ http_port }};
+
+       server_name {{ site_folder }};
+
+       root /var/www/{{ site_folder }};
+       index index.html;
+
+       location / {
+               try_files $uri $uri/ =404;
+       }
+}
+
